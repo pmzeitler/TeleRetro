@@ -1,5 +1,6 @@
 import os
 import pygame as pg
+import random 
 
 from datetime import datetime
 
@@ -9,6 +10,12 @@ UPDATE_FPS = 240
 DISPLAY_FPS = 60
 FPS_DIVIDER = UPDATE_FPS / DISPLAY_FPS
 divider_count = 0
+
+top_colors = [ (255,0,0), (200,0,100), (160,0,128) ] 
+
+top_countdown = random.randint(1, 45)
+mid_countdown = random.randint(1, 45)
+bot_countdown = random.randint(1, 45)
 
 elapsed_ms = 0
 
@@ -44,6 +51,9 @@ def render_shadow_text(screen, font, text, position_x, position_y):
 
 running = True
 show_colon = True
+
+top_color = random.choice(top_colors)
+
 while running:
   update_clock.tick(UPDATE_FPS)
   elapsed_ms += update_clock.get_time()
@@ -60,8 +70,12 @@ while running:
     if (elapsed_ms >= 1000):
       elapsed_ms = 0
       show_colon = not show_colon
+      top_countdown -= 1
+      if (top_countdown <= 0):
+        top_countdown = random.randint(40, 50)
+        top_color = random.choice(top_colors)
 
-    pg.draw.rect(screen, (255,0,0), pg.Rect(0,0,640,80))
+    pg.draw.rect(screen, top_color, pg.Rect(0,0,640,80))
     
     pg.draw.rect(screen, (0,255,0), pg.Rect(0,400,640,80))
     
@@ -73,8 +87,8 @@ while running:
     formatted_time = now.strftime(format_str)
     tsize = get_rendered_length(font_lg, formatted_time)
     render_shadow_text(screen, font_lg, formatted_time, 635-tsize[0], 5)
-    tsize = get_rendered_length(font_lg, "Testing Second Line")
-    render_shadow_text(screen, font_lg, "Testing Second Line", 635-tsize[0], 75-tsize[1])
+    tsize = get_rendered_length(font_lg, str(top_countdown))
+    render_shadow_text(screen, font_lg, str(top_countdown), 635-tsize[0], 75-tsize[1])
     
     pg.display.flip()
 	
